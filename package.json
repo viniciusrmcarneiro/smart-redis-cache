@@ -1,0 +1,29 @@
+{
+  "name": "smart-redis-cache",
+  "version": "0.0.1",
+  "description": "full featured cache solution with complex and recycle cache when data is changed",
+  "main": "src/cache",
+  "scripts": {
+    "test": "mocha --opts ./mocha.opts"
+  },
+  "keywords": [
+    "cache",
+    "redis cache",
+    "cache manager",
+    "cache recycle",
+    "recycle",
+    "caching",
+    "redis",
+    "ttl"
+  ],
+  "author": "Vinicius Carneiro",
+  "license": "MIT",
+  "devDependencies": {
+    "glob": "^7.1.3",
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "decypher": "^0.13.0",
+    "redisgraph.js": "^1.0.2"
+  }
+}

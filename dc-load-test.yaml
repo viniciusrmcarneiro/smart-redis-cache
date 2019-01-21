@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+  test:
+    build:
+      context: .
+    networks:
+      nt_test:
+    command: npm test
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./example/test:/app/example/test
+      - ./example/package.json:/app/example/package.json
+    environment:
+      MONGO_SERVER: mongo-server.local
+      REDIS_SERVER: redis-server.local
+      APP_URL: http://app:8000
+
+  load-test:
+    build:
+      context: .
+    networks:
+      nt_test:
+    command: node_modules/.bin/nodemon test/load-test.js
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./example/src:/app/example/src
+      - ./example/test:/app/example/test
+    environment:
+      MONGO_SERVER: mongo-server.local
+      REDIS_SERVER: redis-server.local
+
+  redis-cli:
+    image: redis:5-alpine
+    networks:
+      nt_test:
+    entrypoint: redis-cli -h redis
+
+networks:
+  nt_test:

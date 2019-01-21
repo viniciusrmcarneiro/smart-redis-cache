@@ -1,0 +1,56 @@
+version: '3.7'
+services:
+  worker:
+    build:
+      context: .
+    networks:
+      nt_test:
+    command: node src/workers/worker-blocking.js
+    # command: node src/workers/worker-subscribe.js
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./example/src:/app/example/src
+    environment:
+      MONGO_SERVER: mongo-server.local
+      REDIS_SERVER: redis-server.local
+
+  app:
+    build:
+      context: .
+    networks:
+      nt_test:
+    command: node_modules/.bin/nodemon --inspect=0.0.0.0:6000 src/index.js
+    # command: node src/index.js
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./example/server.csr:/app/example/server.csr
+      - ./example/server.crt:/app/example/server.crt
+      - ./example/server.key:/app/example/server.key
+      - ./example/src:/app/example/src
+      - ./example/package.json:/app/example/package.json
+    environment:
+      MONGO_SERVER: mongo-server.local
+      REDIS_SERVER: redis-server.local
+
+  redis:
+    build:
+      context: ./redis
+      dockerfile: redis.Dockerfile
+    networks:
+      nt_test:
+        aliases:
+          - redis-server.local
+
+  db:
+    image: mongo:3.1
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      nt_test:
+        aliases:
+          - mongo-server.local
+networks:
+  nt_test:
