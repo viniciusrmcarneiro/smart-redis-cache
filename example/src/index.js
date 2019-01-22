@@ -10,20 +10,18 @@ mongo
         Object.assign({}, _config.mongodb.connObj, { tableName: "users" })
     )
     .then((userTable) => {
-        const userCrud = require("./user-crud");
+        const userCrud = require("./user-crud")(userTable);
         const cache = require("smart-redis-cache/src/cache")(
             new Redis(_config.redis.connObj)
         );
-        const { getUser, updateUser, createUser } = require("./user-cached")({
+
+        const { read, update, create, delete } = require("./user-cached")({
             userCrud,
             cache,
-        });
+        })
 
-        const update = updateUser.bind(null, userTable);
-        const create = createUser.bind(null, userTable);
-        const read = getUser.bind(null, userTable);
 
-        app.use(userRoutes.create({ update, create, read }));
+        app.use(userRoutes.create({ update, create, read, delete }));
     });
 
 const server = app.listen(_config.http.port, () =>

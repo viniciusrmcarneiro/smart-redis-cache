@@ -14,6 +14,7 @@ const createTableCli = ({ url, dbName, tableName }) =>
                 );
             },
             getById: id => collection.findOne({ _id: new ObjectID(id) }),
+            removeById: id => collection.remove({ _id: new ObjectID(id) }),
         };
     });
 

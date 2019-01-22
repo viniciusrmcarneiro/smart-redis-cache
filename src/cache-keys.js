@@ -1,6 +1,3 @@
-const { escapeLiteralMap } = require('decypher/helpers');
-
-const replaceDtoS = s => `'${s}'`;
 const storeEntity = redis => ({ ttlInMS, entity, key, data }) => {
     const args = [`entity:${entity}:${key}`, JSON.stringify(data)];
     if (ttlInMS) {
