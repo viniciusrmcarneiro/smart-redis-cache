@@ -21,7 +21,7 @@ describe(`#${__targetRelativePath}`, () => {
         expect(backend).to.have.keys(
             "storeEntity",
             "getEntity",
-            "discardEntity",
+            "notifyEntityChanged",
         );
     });
 
@@ -31,13 +31,13 @@ describe(`#${__targetRelativePath}`, () => {
             const backend = _target(redisCli);
             const entity = "user";
             const key = "123";
-            const data = "";
-            backend.storeEntity({ entity, key, data });
+            const expectedKey = "entity:user:123";
+            backend.storeEntity({ entity, key, data: "" });
 
             sinon.assert.calledOnce(redisCli.set);
 
             expect(redisCli.set.getCall(0).args[0]).to.be.equal(
-                "entity:user:123",
+                expectedKey,
             );
         });
 
@@ -47,13 +47,14 @@ describe(`#${__targetRelativePath}`, () => {
             const entity = "user";
             const key = "123";
             const data = { anything: 1 };
+            const expectedData = '{"anything":1}';
             redisCli.set.resolves({ ok: 1 });
             await backend.storeEntity({ entity, key, data });
 
             sinon.assert.calledOnce(redisCli.set);
 
             expect(redisCli.set.getCall(0).args[1]).to.be.equal(
-                '{"anything":1}',
+                expectedData,
             );
         });
 
@@ -126,13 +127,14 @@ describe(`#${__targetRelativePath}`, () => {
             const backend = _target(redisCli);
             const entity = "user";
             const key = "123";
+            const expectedKey = "entity:user:123";
 
             redisCli.get.resolves();
 
             await backend.getEntity({ entity, key });
 
             sinon.assert.calledOnce(redisCli.get);
-            sinon.assert.calledWithExactly(redisCli.get, "entity:user:123");
+            sinon.assert.calledWithExactly(redisCli.get, expectedKey);
         });
 
         it("should return a parsed object when it exists", () => {
@@ -140,12 +142,12 @@ describe(`#${__targetRelativePath}`, () => {
             const backend = _target(redisCli);
             const entity = "user";
             const key = "123";
-
+            const expectedResult = { a: 1 };
             redisCli.get.resolves(`{"a":1}`);
 
             return backend
                 .getEntity({ entity, key })
-                .should.eventually.become({ a: 1 });
+                .should.eventually.become(expectedResult);
         });
 
         it("should return undefined when it doesn't exist", () => {
@@ -153,26 +155,26 @@ describe(`#${__targetRelativePath}`, () => {
             const backend = _target(redisCli);
             const entity = "user";
             const key = "123";
-
+            const expectedResult = undefined;
             redisCli.get.resolves(undefined);
 
             return backend
                 .getEntity({ entity, key })
-                .should.eventually.become(undefined);
+                .should.eventually.become(expectedResult);
         });
     });
 
-    describe("discardEntity", () => {
-        it("should add entity to be discarded in the entity:changed list", async () => {
+    describe("notifyEntityChanged", () => {
+        it("should add entity to be notifyEntityChanged in the entity:changed list", async () => {
             const redisCli = sinon.stub({ rpush: () => {} });
             const backend = _target(redisCli);
             const entity = "user";
             const key = "123";
-
-            backend.discardEntity({ entity, key });
+            const expectedData = `{"entity":"user","key":"123"}`;
+            backend.notifyEntityChanged({ entity, key });
 
             sinon.assert.calledOnce(redisCli.rpush);
-            sinon.assert.calledWithExactly(redisCli.rpush, "entity:changed", `{"entity":"user","key":"123"}`);
+            sinon.assert.calledWithExactly(redisCli.rpush, "entity:changed", expectedData);
         });
     });
 });

@@ -15,12 +15,12 @@ const getEntity = (redis) => ({ key, entity }) => {
         .then((a) => (a ? JSON.parse(a) : undefined));
 };
 
-const discardEntity = (redis) => ({ entity, key }) => {
+const notifyEntityChanged = (redis) => ({ entity, key }) => {
     return redis.rpush("entity:changed", JSON.stringify({ entity, key }));
 };
 
 module.exports = (redisCli) => ({
     storeEntity: storeEntity(redisCli),
     getEntity: getEntity(redisCli),
-    discardEntity: discardEntity(redisCli),
+    notifyEntityChanged: notifyEntityChanged(redisCli),
 });
