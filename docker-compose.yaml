@@ -34,6 +34,27 @@ services:
       MONGO_SERVER: mongo-server.local
       REDIS_SERVER: redis-server.local
 
+  cache-redis-example:
+    build:
+      context: ./
+      dockerfile: examples.Dockerfile
+    command: node src/cache-redis.example.js
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+    networks:
+      nt_test:
+    environment:
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: postgres-server.local
+      POSTGRES_USER: user123
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: db123
+      REDIS_HOST: redis-server.local
+    depends_on:
+      - redis
+      - postgres
+
   redis:
     build:
       context: ./redis
@@ -43,6 +64,16 @@ services:
         aliases:
           - redis-server.local
 
+  postgres:
+    image: postgres:11.1
+    environment:
+      POSTGRES_PASSWORD: password123
+      POSTGRES_USER: user123
+      POSTGRES_DB: db123
+    networks:
+      nt_test:
+        aliases:
+          - postgres-server.local
   db:
     image: mongo:3.1
     # environment:
