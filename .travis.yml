@@ -1,0 +1,30 @@
+language: node_js
+
+cache:
+  directories:
+    - ~/.npm
+
+notifications:
+  email: false
+
+node_js:
+  - '10'
+  - '9'
+  - '8'
+
+
+jobs:
+  include:
+    - script: npm run test
+    - stage: deploy
+      if: branch = master
+      script: npx semantic-release
+
+after_success:
+  - cat ./coverage/lcov.info | ./node_modules/.bin/codecov
+  - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
+  - cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage
+
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
