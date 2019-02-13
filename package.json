@@ -2,7 +2,7 @@
   "license": "MIT",
   "private": false,
   "name": "smart-redis-cache",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "full featured cache solution with complex and recycle cache when data is changed",
   "main": "src/cache",
   "scripts": {
