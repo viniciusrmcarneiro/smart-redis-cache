@@ -7,7 +7,8 @@
   "main": "src/cache",
   "scripts": {
     "test": "mocha --opts ./mocha.opts \"./**/*.spec.js\"",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "commit": "npx git-cz"
   },
   "author": "Vinicius Carneiro",
   "contributors": [
@@ -31,6 +32,7 @@
     "ttl"
   ],
   "release": {
+    "branch": "master",
     "verifyConditions": [
       "@semantic-release/changelog",
       "@semantic-release/npm",
