@@ -13,7 +13,7 @@ module.exports = ({ crud, cache }) => {
         modifier: crud.update,
     });
 
-    const delete = recyclerNotifier({
+    const remove = recyclerNotifier({
         cache,
         entity: "user",
         keyGetter,
@@ -27,5 +27,5 @@ module.exports = ({ crud, cache }) => {
         keyGetter,
         getter: crud.read,
     });
-    return { update, read, delete, };
+    return { update, read, remove };
 };

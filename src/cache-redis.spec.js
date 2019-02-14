@@ -21,7 +21,7 @@ describe(`#${__targetRelativePath}`, () => {
         expect(backend).to.have.keys(
             "storeEntity",
             "getEntity",
-            "notifyEntityChanged",
+            "notifyEntityChanged"
         );
     });
 
@@ -36,9 +36,7 @@ describe(`#${__targetRelativePath}`, () => {
 
             sinon.assert.calledOnce(redisCli.set);
 
-            expect(redisCli.set.getCall(0).args[0]).to.be.equal(
-                expectedKey,
-            );
+            expect(redisCli.set.getCall(0).args[0]).to.be.equal(expectedKey);
         });
 
         it("should save stringifyed data in redis ", async () => {
@@ -47,15 +45,14 @@ describe(`#${__targetRelativePath}`, () => {
             const entity = "user";
             const key = "123";
             const data = { anything: 1 };
+            // eslint-disable-next-line quotes
             const expectedData = '{"anything":1}';
             redisCli.set.resolves({ ok: 1 });
             await backend.storeEntity({ entity, key, data });
 
             sinon.assert.calledOnce(redisCli.set);
 
-            expect(redisCli.set.getCall(0).args[1]).to.be.equal(
-                expectedData,
-            );
+            expect(redisCli.set.getCall(0).args[1]).to.be.equal(expectedData);
         });
 
         it("should set tll when it's a constant", async () => {
@@ -143,7 +140,8 @@ describe(`#${__targetRelativePath}`, () => {
             const entity = "user";
             const key = "123";
             const expectedResult = { a: 1 };
-            redisCli.get.resolves(`{"a":1}`);
+            // eslint-disable-next-line quotes
+            redisCli.get.resolves('{"a":1}');
 
             return backend
                 .getEntity({ entity, key })
@@ -170,11 +168,16 @@ describe(`#${__targetRelativePath}`, () => {
             const backend = _target(redisCli);
             const entity = "user";
             const key = "123";
-            const expectedData = `{"entity":"user","key":"123"}`;
+            // eslint-disable-next-line quotes
+            const expectedData = '{"entity":"user","key":"123"}';
             backend.notifyEntityChanged({ entity, key });
 
             sinon.assert.calledOnce(redisCli.rpush);
-            sinon.assert.calledWithExactly(redisCli.rpush, "entity:changed", expectedData);
+            sinon.assert.calledWithExactly(
+                redisCli.rpush,
+                "entity:changed",
+                expectedData
+            );
         });
     });
 });

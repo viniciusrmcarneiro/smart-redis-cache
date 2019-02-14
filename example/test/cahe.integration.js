@@ -1,4 +1,3 @@
-
 const chai = require("chai");
 const { use, expect } = chai;
 use(require("chai-http"));
@@ -9,7 +8,7 @@ describe.skip(`test`, () => {
     let redisCli;
     before(() => {
         redisCli = new Redis({
-        port: 6379, // Redis port
+            port: 6379, // Redis port
             host: process.env.REDIS_SERVER, // Redis host
             family: 4, // 4 (IPv4) or 6 (IPv6)
             db: 0,
