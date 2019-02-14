@@ -15,13 +15,12 @@ mongo
             new Redis(_config.redis.connObj)
         );
 
-        const { read, update, create, delete } = require("./user-cached")({
+        const { read, update, create, remove } = require("./user-cached")({
             userCrud,
             cache,
-        })
+        });
 
-
-        app.use(userRoutes.create({ update, create, read, delete }));
+        app.use(userRoutes.create({ update, create, read, remove }));
     });
 
 const server = app.listen(_config.http.port, () =>

@@ -3,12 +3,13 @@ const Redis = require("ioredis");
 const pg = require("pg");
 
 const log = (...args) => (data) => {
+    // eslint-disable-next-line no-console
     console.log(...args, data);
     return data;
 };
 
 const _1_Second = 1000 * 5;
-const wait = (ms) => new Promise((r) => setTimeout(() => r(), ms));
+const wait = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms));
 
 const pgCreateClient = (attempts = 0) => {
     const pgClient = new pg.Client({
@@ -39,14 +40,14 @@ const createUserTable = (pgClient) =>
     pgClient.query(
         `CREATE TABLE IF NOT EXISTS public.user (
     id SERIAL, name TEXT not null
-);`,
+);`
     );
 
 const insertUser = (pgClient) =>
     pgClient
         .query(
             "INSERT INTO public.user (id, name) values (DEFAULT, $1::text) RETURNING id;",
-            [new Date().toString()],
+            [new Date().toString()]
         )
         .then((a) => a.rows[0].id)
         .then(log("INSERTED USER ID->"));
@@ -73,7 +74,7 @@ const getUser = (pgClient, cache, userId) => {
                         data,
                     })
                     .then(() => data)
-                    .catch(() => data),
+                    .catch(() => data)
             )
             .then(log("FROM DB->"));
     };
@@ -111,14 +112,17 @@ pgCreateClient(5).then((pgClient) => {
         process.on(event, () => {
             redisCli.disconnect();
             pgClient.end();
-        }),
+        })
     );
     const cache = CacheRedis(redisCli);
 
-    return main(pgClient, cache)
-        .catch(console.error.bind(console, "ERROR->"))
-        .then(() => {
-            redisCli.disconnect();
-            pgClient.end();
-        });
+    return (
+        main(pgClient, cache)
+            // eslint-disable-next-line no-console
+            .catch(console.error.bind(console, "ERROR->"))
+            .then(() => {
+                redisCli.disconnect();
+                pgClient.end();
+            })
+    );
 });

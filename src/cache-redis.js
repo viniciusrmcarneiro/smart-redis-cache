@@ -7,7 +7,7 @@ const storeEntity = (redis) => ({ ttlInMS, entity, key, data }) => {
     if (ttlInMS) {
         args.push(
             "PX",
-            typeof ttlInMS == "function" ? ttlInMS({ key, data }) : ttlInMS,
+            typeof ttlInMS == "function" ? ttlInMS({ key, data }) : ttlInMS
         );
     }
 

@@ -1,7 +1,7 @@
-const { MongoClient, ObjectID } = require('mongodb');
+const { MongoClient, ObjectID } = require("mongodb");
 
 const createTableCli = ({ url, dbName, tableName }) =>
-    MongoClient.connect(url).then(client => {
+    MongoClient.connect(url).then((client) => {
         const collection = client.db(dbName).collection(tableName);
 
         return {
@@ -13,8 +13,8 @@ const createTableCli = ({ url, dbName, tableName }) =>
                     { upsert: true }
                 );
             },
-            getById: id => collection.findOne({ _id: new ObjectID(id) }),
-            removeById: id => collection.remove({ _id: new ObjectID(id) }),
+            getById: (id) => collection.findOne({ _id: new ObjectID(id) }),
+            removeById: (id) => collection.remove({ _id: new ObjectID(id) }),
         };
     });
 
