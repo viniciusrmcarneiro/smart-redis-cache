@@ -8,7 +8,7 @@
   "scripts": {
     "semantic-release": "semantic-release",
     "test:only": "mocha --opts ./mocha.opts \"./**/*.spec.js\"",
-    "test": "nyc npm run test:only",
+    "test": "nyc npm run test:only && npm run lint",
     "lint": "eslint .",
     "prettier": "prettier --config ./.prettierrc --write \"{src,test,tests,mocks,examples,example}/**/*.js\"",
     "commit": "npx git-cz"
