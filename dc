@@ -1,8 +1,0 @@
-#!/usr/bin/env node
-const { spawnSync } = require('child_process');
-const glob = require('glob').sync;
-const args = glob('*(dc*.yaml|docker-compose.yaml)')
-    .reduce((acc, fileName) => acc.concat(['-f', fileName]), [])
-    .concat(process.argv.slice(2));
-
-spawnSync('docker-compose', args, { stdio: 'inherit', env: process.env });
