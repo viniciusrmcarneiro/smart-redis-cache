@@ -3,7 +3,7 @@ const { use, expect } = chai;
 use(require("chai-http"));
 const Redis = require("ioredis");
 
-describe.skip(`test`, () => {
+describe.skip("test", () => {
     const _HOST = process.env.APP_URL || "${_HOST}";
     let redisCli;
     before(() => {

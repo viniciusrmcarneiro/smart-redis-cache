@@ -3,6 +3,7 @@ const express = require("express");
 const create = ({ update, create, read }) => {
     const app = express();
     app.get("/update/:id/:email", (req, res, next) => {
+        // eslint-disable-next-line no-console
         console.log(`/update/${req.params.id}/${req.params.email}`);
         update({
             email: req.params.email,
@@ -13,6 +14,7 @@ const create = ({ update, create, read }) => {
     });
 
     app.get("/create/:email", (req, res, next) => {
+        // eslint-disable-next-line no-console
         console.log(`/create/${req.params.email}`);
 
         create({ email: req.params.email })
@@ -21,6 +23,7 @@ const create = ({ update, create, read }) => {
     });
 
     app.get("/read/:id", (req, res, next) => {
+        // eslint-disable-next-line no-console
         console.log(`/read/${req.params.id}`);
         read({ userId: req.params.id })
             .then(res.json.bind(res))

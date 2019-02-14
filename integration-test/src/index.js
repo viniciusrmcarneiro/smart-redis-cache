@@ -24,16 +24,20 @@ mongo
     });
 
 const server = app.listen(_config.http.port, () =>
+// eslint-disable-next-line no-console
     console.log(`listening on port ${_config.http.port}!`)
 );
 
 ["SIGTERM", "SIGINT"].forEach((event) =>
     process.on(event, function() {
         try {
+            // eslint-disable-next-line no-console
             console.log(`${event}-before`);
             server.close();
+            // eslint-disable-next-line no-console
             console.log(`${event}-after`);
         } catch (ex) {
+            // eslint-disable-next-line no-console
             console.erro("error", ex);
         }
     })

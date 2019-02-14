@@ -5,7 +5,7 @@ const Redis = require("ioredis");
 
 const create = () =>
     chai
-        .request(`http://app:8000/create/t1`)
+        .request("http://app:8000/create/t1")
         .get("/")
         .then((res) => res.body.upserted[0]._id);
 
@@ -28,12 +28,6 @@ const update = (id) => {
         });
 };
 
-const notCached = (redisCli) => (id) =>
-    new Promise((r) => setTimeout(() => r(), 500)).then(() =>
-        redisCli.get(`entity:user:${id}`).then((cached) => {
-            expect(cached).to.be.null;
-        })
-    );
 const run = (total) => {
     const redisCli = new Redis({
         port: 6379, // Redis port
@@ -54,6 +48,7 @@ const run = (total) => {
     return Promise.all(a)
         .then(() => redisCli.quit())
         .catch((e) => {
+            // eslint-disable-next-line no-console
             console.log(e);
             redisCli.quit();
         });
