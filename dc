@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+// example of usage:
+// ./dc integration-test config
+// ./dc integration-test up -d app
+
+const { spawnSync } = require("child_process");
+const glob = require("glob").sync;
+
+const pattern = process.argv
+    .slice(2)
+    .slice(0, 1)
+    .pop();
+
+const dockerComposeArgs = process.argv.slice(3);
+
+const files = glob(`*(dc-${pattern}.yaml|docker-compose.yaml)`).reduce(
+    (acc, fileName) => acc.concat(["-f", fileName]),
+    []
+);
+
+spawnSync("docker-compose", files.concat(dockerComposeArgs), {
+    cwd: process.cwd(),
+    stdio: "inherit",
+    env: process.env,
+});

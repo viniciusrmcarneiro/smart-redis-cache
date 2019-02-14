@@ -1,1 +1,9 @@
-node_modules
+**/node_modules
+**/.DS_Store
+**/.git
+**/.gitattributes
+**/.travis.yml
+**/.dockerignore
+**/.nyc_output
+**/.vscode
+**/coverage

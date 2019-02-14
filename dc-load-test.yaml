@@ -1,0 +1,45 @@
+version: '3.7'
+services:
+  test:
+    build:
+      context: .
+    networks:
+      nt_test:
+    command: npm test
+    volumes:
+      - ./package.json:/smart-redis-cache/package.json
+      - ./src:/smart-redis-cache/src
+
+      - ./integration-test/package.json:/integration-test/package.json
+      - ./integration-test/src:/integration-test/src
+      - ./integration-test/test:/integration-test/test
+    environment:
+      MONGO_SERVER: mongo-server.local
+      REDIS_SERVER: redis-server.local
+      APP_URL: http://app:8000
+
+  load-test:
+    build:
+      context: .
+    networks:
+      nt_test:
+    command: node_modules/.bin/nodemon test/load-test.js
+    volumes:
+      - ./package.json:/smart-redis-cache/package.json
+      - ./src:/smart-redis-cache/src
+
+      - ./integration-test/package.json:/integration-test/package.json
+      - ./integration-test/src:/integration-test/src
+      - ./integration-test/test:/integration-test/test
+    environment:
+      MONGO_SERVER: mongo-server.local
+      REDIS_SERVER: redis-server.local
+
+  redis-cli:
+    image: redis:5-alpine
+    networks:
+      nt_test:
+    entrypoint: redis-cli -h redis
+
+networks:
+  nt_test:
