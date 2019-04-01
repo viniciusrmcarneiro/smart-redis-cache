@@ -4,7 +4,7 @@ const recyclerNotifier = ({ cache, entity, keyGetter, modifier }) => (
     Promise.resolve(modifier(...args)).then((result) => {
         const key = keyGetter(...args);
         return cache
-            .publishChangedEntity({ entity, key })
+            .notifyEntityChanged({ entity, key })
             .then(() => result)
             .catch((err) => {
                 // eslint-disable-next-line no-console

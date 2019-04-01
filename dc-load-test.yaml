@@ -23,7 +23,7 @@ services:
       context: .
     networks:
       nt_test:
-    command: node_modules/.bin/nodemon test/load-test.js
+    command: node test/load-test.js
     volumes:
       - ./package.json:/smart-redis-cache/package.json
       - ./src:/smart-redis-cache/src

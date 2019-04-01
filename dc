@@ -2,8 +2,9 @@
 // example of usage:
 // ./dc integration-test config
 // ./dc integration-test up -d app
+// ./dc integration-test config
 
-const { spawnSync } = require("child_process");
+const { spawn } = require("child_process");
 const glob = require("glob").sync;
 
 const pattern = process.argv
@@ -18,7 +19,9 @@ const files = glob(`*(dc-${pattern}.yaml|docker-compose.yaml)`).reduce(
     []
 );
 
-spawnSync("docker-compose", files.concat(dockerComposeArgs), {
+const args = files.concat(dockerComposeArgs);
+
+spawn("docker-compose", args, {
     cwd: process.cwd(),
     stdio: "inherit",
     env: process.env,

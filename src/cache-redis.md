@@ -80,7 +80,7 @@ const getUser = (pgClient, cache, userId) => {
 };
 
 const insertGetGet = async (pgClient, cache) => {
-    // create an user in the table
+    // creating an user in the table
     const id = await insertUser(pgClient);
 
     //  getting user from db and caching

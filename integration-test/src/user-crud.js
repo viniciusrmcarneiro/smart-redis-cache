@@ -17,7 +17,7 @@ const saveUser = (table, userId) => (user) => table.save(userId, user);
 const readUser = (table) => ({ userId }) => table.getById(userId);
 
 const updateUser = (table) => ({ userId, ...payload }) =>
-    readUser(table, { userId })
+    readUser(table)({ userId })
         .then(userExists(userId))
         .then(updateUserValues(payload))
         .then(saveUser(table, userId));
