@@ -1,6 +1,3 @@
-const fs = require("fs");
-const path = require("path");
-
 module.exports = (env) => {
     const http = {
         port: env.PORT || 8000,
