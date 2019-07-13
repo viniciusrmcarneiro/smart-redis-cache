@@ -1,4 +1,11 @@
-const cacher = ({ cache, ttlInMS, entity, keyGetter, getter }) => (...args) => {
+const cacher = ({
+    cache,
+    ttlInMS,
+    entity,
+    keyGetter,
+    getter,
+    logger = { error: () => {} },
+}) => (...args) => {
     const key = keyGetter(...args);
 
     return cache.getEntity({ entity, key }).then((cachedData) => {
@@ -12,7 +19,7 @@ const cacher = ({ cache, ttlInMS, entity, keyGetter, getter }) => (...args) => {
                 .then(() => data)
                 .catch((err) => {
                     // eslint-disable-next-line no-console
-                    console.error("err=>", err);
+                    logger.error("err=>", err);
                     return data;
                 })
         );
