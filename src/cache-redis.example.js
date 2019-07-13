@@ -87,13 +87,13 @@ const getUser = (pgClient, cache, userId) => {
 
 const main = async (pgClient, cache) => {
     await createUserTable(pgClient);
-    const id = await insertUser(pgClient)
+    const id = await insertUser(pgClient);
 
     // getting user from db and caching it
     await getUser(pgClient, cache, id);
 
     // getting user from cache
-    return getUser(pgClient, cache, id).then(log("RESULT->"))
+    return getUser(pgClient, cache, id).then(log("RESULT->"));
 };
 
 pgCreateClient(5).then((pgClient) => {

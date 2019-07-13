@@ -12,4 +12,3 @@
 ./dc integration-test up redis mongo
 ./dc integration-test scale app=1 worker=1
 ./dc load-test run --rm load-test
-
