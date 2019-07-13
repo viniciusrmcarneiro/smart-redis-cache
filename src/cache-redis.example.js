@@ -28,7 +28,7 @@ const pgCreateClient = (attempts = 0) => {
             if (attempts === 0) {
                 throw error;
             }
-            // waits 5 secs so the database container's initialized
+            // waits 5 secs so the database's container initialized
             await wait(_1_Second);
 
             // trying to connect again
@@ -85,20 +85,15 @@ const getUser = (pgClient, cache, userId) => {
         .then(get);
 };
 
-const insertGetGet = async (pgClient, cache) => {
-    // create an user in the table
+const main = async (pgClient, cache) => {
+    await createUserTable(pgClient);
     const id = await insertUser(pgClient);
 
-    //  getting user from db and caching
+    // getting user from db and caching it
     await getUser(pgClient, cache, id);
 
     // getting user from cache
     return getUser(pgClient, cache, id).then(log("RESULT->"));
-};
-
-const main = async (pgClient, cache) => {
-    await createUserTable(pgClient);
-    return insertGetGet(pgClient, cache);
 };
 
 pgCreateClient(5).then((pgClient) => {

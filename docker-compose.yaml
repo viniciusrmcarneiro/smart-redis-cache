@@ -4,11 +4,12 @@ services:
   cache-redis-example:
     build:
       context: ./
-      dockerfile: examples.Dockerfile
+      dockerfile: Dockerfile
+      target: library
     command: node src/cache-redis.example.js
     volumes:
-      - ./src:/app/src
-      - ./package.json:/app/package.json
+      - ./package.json:/smart-redis-cache/package.json
+      - ./src:/smart-redis-cache/src
     networks:
       nt_test:
     environment:
@@ -23,9 +24,7 @@ services:
       - postgres
 
   redis:
-    build:
-      context: ./redis
-      dockerfile: redis.Dockerfile
+    image: redis:5-alpine
     networks:
       nt_test:
         aliases:

@@ -1,0 +1,51 @@
+version: '3.7'
+services:
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: integration
+    command: node src/workers/worker-blocking.js
+    volumes:
+      - ./package.json:/smart-redis-cache/package.json
+      - ./src:/smart-redis-cache/src
+
+      - ./integration-test/package.json:/integration-test/package.json
+      - ./integration-test/src:/integration-test/src
+    environment:
+      MONGO_SERVER: mongo-server.local
+      REDIS_SERVER: redis-server.local
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      nt_test:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: integration
+    command: node_modules/.bin/nodemon --inspect=0.0.0.0:6000 src/index.js
+    volumes:
+      - ./package.json:/smart-redis-cache/package.json
+      - ./src:/smart-redis-cache/src
+
+      - ./integration-test/package.json:/integration-test/package.json
+      - ./integration-test/src:/integration-test/src
+    environment:
+      MONGO_SERVER: mongo-server.local
+      REDIS_SERVER: redis-server.local
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      nt_test:
+
+  mongo:
+    image: mongo:3.1
+    networks:
+      nt_test:
+        aliases:
+          - mongo-server.local

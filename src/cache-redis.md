@@ -1,13 +1,13 @@
 # CacheRedis
 
-It is a very low level cache layer. Basically it's gives you the functions: storeEntity and getEntity.
+It is a very low level cache layer. Basically it exposes two functions storeEntity and getEntity.
 
 ## getEntity
 
 ```js
 {
     entity: String; // it is the namesapce which the data will be cached
-    key: String; // it is the namesapce which the data will be cached
+    key: String; // id/key of the cached entity
 }
 ```
 
@@ -16,14 +16,14 @@ It is a very low level cache layer. Basically it's gives you the functions: stor
 ```js
 {
     entity: String; // it is the namesapce which the data will be cached
-    key: String; // it is the namesapce which the data will be cached
+    key: String; // id/key of the cached entity
     data: Object; // the data that should be cached
 }
 ```
 
 ## notifyEntityChanged
 
-mostly it should be called by Whenever an entity's value is changed or deleted. It will publish the change so the entity value is deleted from the cache.
+mostly it is called whenever an entity's value is changed or deleted. It will publish the change so the entity cache deleted.
 
 ```js
 {
@@ -34,17 +34,34 @@ mostly it should be called by Whenever an entity's value is changed or deleted. 
 
 ## Very basic usage of the cache-redis
 
-This example assumes that there is a pg and redis connection established already. For more details take a look at the file **cache-redis.example.js**
+This example assumes that there is a postegres and redis connection established. For more details take a look at the file **cache-redis.example.js**
 
 ```javascript
+const CacheRedis = require("./cache-redis.js");
 const Redis = require("ioredis");
 const pg = require("pg");
-const CacheRedis = require("./cache-redis.js");
 
 const log = (...args) => (data) => {
     console.log(...args, data);
     return data;
 };
+
+
+const createUserTable = (pgClient) =>
+    pgClient.query(
+        `CREATE TABLE IF NOT EXISTS public.user (
+    id SERIAL, name TEXT not null
+);`
+    );
+
+const insertUser = (pgClient) =>
+    pgClient
+        .query(
+            "INSERT INTO public.user (id, name) values (DEFAULT, $1::text) RETURNING id;",
+            [new Date().toString()]
+        )
+        .then((a) => a.rows[0].id)
+        .then(log("INSERTED USER ID->"));
 
 const getUser = (pgClient, cache, userId) => {
     const entity = "user";
@@ -68,7 +85,7 @@ const getUser = (pgClient, cache, userId) => {
                         data,
                     })
                     .then(() => data)
-                    .catch(() => data),
+                    .catch(() => data)
             )
             .then(log("FROM DB->"));
     };
@@ -79,35 +96,35 @@ const getUser = (pgClient, cache, userId) => {
         .then(get);
 };
 
-const insertGetGet = async (pgClient, cache) => {
-    // create an user in the table
-    const id = await insertUser(pgClient);
+const main = async (pgClient, cache) => {
+    await createUserTable(pgClient);
+    const id = await insertUser(pgClient)
 
-    //  getting user from db and caching
+    // getting user from db and caching it
     await getUser(pgClient, cache, id);
 
     // getting user from cache
-    return getUser(pgClient, cache, id).then(log("RESULT->"));
+    return getUser(pgClient, cache, id).then(log("RESULT->"))
 };
 
-const main = async (pgClient, redisCli) => {
-    const cache = CacheRedis(redisCli);
 
-    await createUserTable(pgClient);
-    return insertGetGet(pgClient, cache);
-};
+// connect to the databases
+let pgClient, redisCli;
+
+const cache = CacheRedis(redisCli);
 
 ["SIGTERM", "SIGINT"].forEach((event) =>
     process.on(event, () => {
         redisCli.disconnect();
         pgClient.end();
-    }),
+    })
 );
 
-return main(pgClient, redisCli)
+main(pgClient, cache)
     .catch(console.error.bind(console, "ERROR->"))
     .then(() => {
         redisCli.disconnect();
         pgClient.end();
-    });
+    })
+
 ```
