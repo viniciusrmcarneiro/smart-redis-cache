@@ -18,7 +18,6 @@ const cacher = ({
                 .storeEntity({ ttlInMS, entity, key, data })
                 .then(() => data)
                 .catch((err) => {
-                    // eslint-disable-next-line no-console
                     logger.error("err=>", err);
                     return data;
                 })

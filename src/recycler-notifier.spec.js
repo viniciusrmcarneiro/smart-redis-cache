@@ -42,7 +42,8 @@ describe(`#${__targetRelativePath}`, () => {
             ...expectedArgs
         );
     });
-    it("should return the modifier result", async () => {
+
+    it("should return the modifier result", () => {
         const modifier = sinon.stub();
         const keyGetter = sinon.stub();
         const cache = sinon.stub({
@@ -55,9 +56,26 @@ describe(`#${__targetRelativePath}`, () => {
         cache.notifyEntityChanged.resolves();
         modifier.resolves(expectedReturn);
 
-        const returned = await _target({ cache, entity, keyGetter, modifier })(
-            ""
-        );
-        expect(returned).to.equal(expectedReturn);
+        return expect(
+            _target({ cache, entity, keyGetter, modifier })("")
+        ).eventually.become(expectedReturn);
+    });
+
+    it("should return the modifier result when notity change fails", () => {
+        const modifier = sinon.stub();
+        const keyGetter = sinon.stub();
+        const cache = sinon.stub({
+            notifyEntityChanged: () => {},
+        });
+
+        const entity = "user";
+
+        const expectedReturn = { name: "xpto", anything: { v: true } };
+        cache.notifyEntityChanged.rejects(new Error("xpto"));
+        modifier.resolves(expectedReturn);
+
+        return expect(
+            _target({ cache, entity, keyGetter, modifier })("")
+        ).eventually.become(expectedReturn);
     });
 });
