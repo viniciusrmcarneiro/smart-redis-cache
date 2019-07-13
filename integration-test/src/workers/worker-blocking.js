@@ -42,7 +42,7 @@ const wait = (dbCli) =>
 const main = () => {
     const dbCli = new Redis(_RedisConfi);
     wait(dbCli);
-    return () => dbCli.close();
+    return () => dbCli.quit();
 };
 
 const finish = main();
@@ -57,7 +57,7 @@ const finish = main();
             console.log(`${event}-after`);
         } catch (ex) {
             // eslint-disable-next-line no-console
-            console.erro("error", ex);
+            console.error("error", ex);
         }
     })
 );

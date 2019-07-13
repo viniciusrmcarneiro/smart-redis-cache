@@ -3,10 +3,6 @@ const path = require("path");
 
 module.exports = (env) => {
     const http = {
-        certs: {
-            key: fs.readFileSync(path.join(__dirname, "../server.key")),
-            cert: fs.readFileSync(path.join(__dirname, "../server.crt")),
-        },
         port: env.PORT || 8000,
     };
     const redis = {
