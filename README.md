@@ -1,6 +1,7 @@
 # smart-redis-cache
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/221cc589e1a14275ae9a8e904844d968)](https://app.codacy.com/app/viniciusrmcarneiro/smart-redis-cache?utm_source=github.com&utm_medium=referral&utm_content=viniciusrmcarneiro/smart-redis-cache&utm_campaign=Badge_Grade_Dashboard)
+[![Coverage Status](https://coveralls.io/repos/github/viniciusrmcarneiro/smart-redis-cache/badge.svg)](https://coveralls.io/github/viniciusrmcarneiro/smart-redis-cache)
 
 ## Examples
 
@@ -11,6 +12,8 @@
 ```
 ### how to run load test
 
+```bash
 ./dc integration-test up redis mongo
 ./dc integration-test scale app=1 worker=1
 ./dc load-test run --rm load-test
+```
