@@ -13,7 +13,4 @@ const recyclerNotifier = ({ cache, entity, keyGetter, modifier }) => (
             });
     });
 
-const create = () => {
-    return () => {};
-};
-module.exports = { recyclerNotifier, create };
+module.exports = recyclerNotifier;

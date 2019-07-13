@@ -1,4 +1,4 @@
-const { recyclerNotifier } = require("smart-redis-cache/src/recycler-notifier");
+const recyclerNotifier = require("smart-redis-cache/src/recycler-notifier");
 const cacher = require("smart-redis-cache/src/cacher");
 
 const _60Minutes = 1000 * 60 * 60;
